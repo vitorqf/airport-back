@@ -1,4 +1,4 @@
-parts = [
+Parts = [
     {
         'id': 1,
         'name': 'Motherboard',
