@@ -1,5 +1,3 @@
-from validation import Part
-
 Parts = [
     {
         'id': 1,

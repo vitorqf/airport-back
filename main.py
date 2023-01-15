@@ -25,9 +25,31 @@ def get_parts():
 def create_new_part():
     part = request.json
     Parts.append(part)
+    
     return make_response(jsonify(
         message='Part successfully created!',
         part=part
     ))
 
-app.run(debug=True)
+
+@app.route('/parts/<part_id>', methods=['GET'])
+def get_part(part_id: str):
+    res = None
+
+    for part in Parts:
+        if part['id'] == int(part_id):
+            res = part
+        
+    if res is None:
+        return make_response(jsonify(
+            message='Part not found!',
+            part_id=part_id
+        ))
+    
+    return make_response(jsonify(
+        message='Part successfully retrieved!',
+        part=res
+    ))
+
+
+app.run()
