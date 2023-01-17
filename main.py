@@ -1,105 +1,228 @@
+from uuid import uuid4
 from model.airport import AirportSchema
 from model.city import CitySchema
 from model.flight import FlightSchema
 from model.seat import SeatSchema
 from model.crew import CrewSchema
 
-guarulhos = {
-    "name": "Guarulhos",
-    "state": "São Paulo",
-    "country": "Brazil",
-}
+import datetime
 
-los_angeles = {
-    "name": "Los Angeles",
-    "state": "California",
-    "country": "United States",
-}
+from flask import Flask, request, make_response, jsonify
 
-guarulhos = CitySchema().load(guarulhos)
-los_angeles = CitySchema().load(los_angeles)
+app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 
-print(f"=== Serialized City Info ===\n{ guarulhos }\n{ los_angeles }")
-
-guarulhos_airport = {
-    # Deserializes the city object to a dictionary
-    "city": CitySchema().dump(guarulhos),
-    "max_departures": 10,
-    "name": "Guarulhos International Airport"
-}
-
-guarulhos_airport = AirportSchema().load(guarulhos_airport)
-
-los_angeles_airport = {
-    "city": CitySchema().dump(los_angeles),
-    "max_departures": 10,
-    "name": "Los Angeles International Airport"
-}
-
-los_angeles_airport = AirportSchema().load(los_angeles_airport)
-
-print(f"\n=== Serialized Airport Info ===\n{ guarulhos_airport }\n{ los_angeles_airport }")
-
-seats = [
+city_list = [
     {
-        'id': 'A11'
+        "name": "Guarulhos",
+        "state": "São Paulo",
+        "country": "Brazil",
     },
     {
-        'id': 'A12'
+        "name": "Los Angeles",
+        "state": "California",
+        "country": "United States",
     },
     {
-        'id': 'A13'
+        "name": "São Paulo",
+        "state": "São Paulo",
+        "country": "Brazil",
     },
     {
-        'id': 'A14'
+        "name": "Recife",
+        "state": "Pernambuco",
+        "country": "Brazil",
     }
 ]
 
-seats = SeatSchema(many=True).load(seats)
-
-crew = [
+airport_list = [
     {
-        'name': 'John Doe',
-        'occupation': 'Pilot'
+        "city": city_list[0],
+        "max_departures": 10,
+        "name": "Guarulhos International Airport"
     },
     {
-        'name': 'Jane Doe',
-        'occupation': 'Co-Pilot'
+        "city": city_list[1],
+        "max_departures": 10,
+        "name": "Los Angeles International Airport"
     },
     {
-        'name': 'John Smith',
-        'occupation': 'Flight Attendant'
-    },
-    {
-        'name': 'Jane Smith',
-        'occupation': 'Flight Attendant'
+        "city": city_list[3],
+        "max_departures": 10,
+        "name": "Recife International Airport"
     }
 ]
 
-crew = CrewSchema(many=True).load(crew)
+flight_list = [
+    {
+        "id": str(uuid4()),
+        "type": "International",
+        "departure": airport_list[0],
+        "destination": airport_list[1],
+        "departure_time": datetime.time(8),
+        "departure_date": datetime.date(2022, 10, 28),
+        "seats": [
+            {
+                "id": "A11",
+            },
+            {
+                "id": "A12",
+            },
+            {
+                "id": "A13",
+            },
+            {
+                "id": "B11",
+            },
+            {
+                "id": "B12",
+            },
+            {
+                "id": "B13",
+            }
+        ],
+        "crew": [
+            {
+                "name": "John Doe",
+                "role": "Pilot"
+            },
+            {
+                "name": "Jane Doe",
+                "role": "Co-Pilot"
+            },
+            {
+                "name": "John Smith",
+                "role": "Flight Attendant"
+            },
+            {
+                "name": "Jane Smith",
+                "role": "Flight Attendant"
+            }
+        ]
+    },
+    {
+        "id": str(uuid4()),
+        "type": "National",
+        "departure": airport_list[0],
+        "destination": airport_list[2],
+        "departure_time": datetime.time(10),
+        "departure_date": datetime.date(2022, 11, 20),
+        "seats": [
+            {
+                "id": "A11",
+            },
+            {
+                "id": "A12",
+            },
+            {
+                "id": "A13",
+            },
+            {
+                "id": "B11",
+            },
+            {
+                "id": "B12",
+            },
+            {
+                "id": "B13",
+            }
+        ],
+        "crew": [
+            {
+                "name": "Augusto Machado",
+                "role": "Pilot"
+            },
+            {
+                "name": "Maria Silvana",
+                "role": "Co-Pilot"
+            },
+            {
+                "name": "Cleber Santos",
+                "role": "Flight Attendant"
+            },
+            {
+                "name": "Larissa Silva",
+                "role": "Flight Attendant"
+            }
+        ]
+    }
+]
 
-flight_a01 = {
-    'type': 'International',
-    'departure': AirportSchema().dump(guarulhos_airport),
-    'destination': AirportSchema().dump(los_angeles_airport),
-    'departure_time': '10:00:00',
-    'departure_date': '2021-01-01',
-    'seats': SeatSchema(many=True).dump(seats),
-    'crew': CrewSchema(many=True).dump(crew)
-}
+# 9506aff3-345e-437d-90ed-99a9e0b1ace0
 
-flight_a01 = FlightSchema().load(flight_a01)
+"""City related routes and methods"""
+@app.route('/city', methods=['GET'])
+def get_cities():
+    return make_response(jsonify(
+        cities=CitySchema(many=True).dump(city_list)
+    ), 200)
 
-print(f"\n=== Serialized Flight Info ===\n{ flight_a01 }")
+@app.route('/city/add', methods=['POST'])
+def add_city():
+    city = {
+        "name": request.json["name"],
+        "state": request.json["state"],
+        "country": request.json["country"]
+    }
 
-free_seats = flight_a01.freeSeats()
+    schema = CitySchema().load(city)
 
-print(f"\n=== Free Seats ===")
-for seat in free_seats:
-    print(seat.id)
+    city_list.append(schema)
 
-crew_members = flight_a01.showCrew()
+    return make_response(jsonify(
+        message="City added successfully!",
+        city=CitySchema().dump(schema)
+    ), 200)
 
-print(f"\n=== Crew Members ===")
-for crew_member in crew_members:
-    print(crew_member)
+
+"""Airport related routes and methods"""
+@app.route('/airport', methods=['GET'])
+def get_airports():
+    return make_response(jsonify(
+        airports=AirportSchema(many=True).dump(airport_list)
+    ), 200)
+
+@app.route('/airport/add', methods=['POST'])
+def add_airport():
+    # get city that matchs the name from request
+    city = [city for city in city_list if city["name"] == request.json["city"]][0]
+
+    airport = {
+        "city": city,
+        "max_departures": request.json["max_departures"],
+        "name": request.json["name"]
+    }
+
+    schema = AirportSchema().load(airport)
+
+    airport_list.append(schema)
+
+    return make_response(jsonify(
+        message="Airport added successfully!",
+        airport=AirportSchema().dump(schema)
+    ), 200)
+                                     
+"""Flight related routes and methods"""
+@app.route('/flight', methods=['GET'])
+def get_flights():
+    return make_response(jsonify(
+        flights=FlightSchema(many=True).dump(flight_list)
+    ), 200)
+
+@app.route('/flight/destination/<destination>', methods=['GET'])
+def get_flight_by_destination(destination: str):
+    flight = [flight for flight in flight_list if flight["destination"]["name"] == str(destination)][0]
+
+    return make_response(jsonify(
+        flight=FlightSchema().dump(flight)
+    ), 200)
+
+@app.route('/flight/departure/<departure>', methods=['GET'])
+def get_flight_by_departure(departure: str):
+    flight = [flight for flight in flight_list if flight["departure"]["name"] == str(departure)][0]
+
+    return make_response(jsonify(
+        flight=FlightSchema().dump(flight)
+    ), 200)
+
+app.run(debug=True)
