@@ -1,32 +1,184 @@
-Parts = [
+import datetime
+from uuid import uuid4
+
+city_list = [
     {
-        'id': 1,
-        'name': 'Motherboard',
-        'model': 'Gigabyte B450M',
-        'price': 99
+        "name": "Guarulhos",
+        "state": "Sao Paulo",
+        "country": "Brazil",
     },
     {
-        'id': 2,
-        'name': 'CPU',
-        'model': 'AMD Ryzen 5500',
-        'price': 199
+        "name": "Los Angeles",
+        "state": "California",
+        "country": "United States",
     },
     {
-        'id': 3,
-        'name': 'RAM',
-        'model': 'XPG Gaming 16GB 3200Mhz',
-        'price': 39
+        "name": "Sao Paulo",
+        "state": "Sao Paulo",
+        "country": "Brazil",
     },
     {
-        'id': 4,
-        'name': 'Hard Disk',
-        'model': 'WD Blue 1TB',
-        'price': 29
+        "name": "Recife",
+        "state": "Pernambuco",
+        "country": "Brazil",
+    }
+]
+
+airport_list = [
+    {
+        "city": city_list[0],
+        "max_departures": 10,
+        "name": "Guarulhos International Airport"
     },
     {
-        'id': 5,
-        'name': 'GPU',
-        'model': 'MSI RTX 2060',
-        'price': 299
+        "city": city_list[1],
+        "max_departures": 10,
+        "name": "Los Angeles International Airport"
+    },
+    {
+        "city": city_list[3],
+        "max_departures": 10,
+        "name": "Recife International Airport"
+    }
+]
+
+flight_list = [
+    {
+        "id": str(uuid4()),
+        "type": "International",
+        "departure": airport_list[0],
+        "destination": airport_list[1],
+        "departure_time": datetime.time(8),
+        "departure_date": datetime.date(2022, 10, 28),
+        "seats": [
+            {
+                "id": "A11",
+            },
+            {
+                "id": "A12",
+            },
+            {
+                "id": "A13",
+            },
+            {
+                "id": "B11",
+            },
+            {
+                "id": "B12",
+            },
+            {
+                "id": "B13",
+            }
+        ],
+        "crew": [
+            {
+                "name": "John Doe",
+                "role": "Pilot"
+            },
+            {
+                "name": "Jane Doe",
+                "role": "Co-Pilot"
+            },
+            {
+                "name": "John Smith",
+                "role": "Flight Attendant"
+            },
+            {
+                "name": "Jane Smith",
+                "role": "Flight Attendant"
+            }
+        ]
+    },
+    {
+        "id": str(uuid4()),
+        "type": "National",
+        "departure": airport_list[0],
+        "destination": airport_list[2],
+        "departure_time": datetime.time(10),
+        "departure_date": datetime.date(2022, 11, 20),
+        "seats": [
+            {
+                "id": "A11",
+            },
+            {
+                "id": "A12",
+            },
+            {
+                "id": "A13",
+            },
+            {
+                "id": "B11",
+            },
+            {
+                "id": "B12",
+            },
+            {
+                "id": "B13",
+            }
+        ],
+        "crew": [
+            {
+                "name": "Augusto Machado",
+                "role": "Pilot"
+            },
+            {
+                "name": "Maria Silvana",
+                "role": "Co-Pilot"
+            },
+            {
+                "name": "Cleber Santos",
+                "role": "Flight Attendant"
+            },
+            {
+                "name": "Larissa Silva",
+                "role": "Flight Attendant"
+            }
+        ]
+    },
+    {
+        "id": str(uuid4()),
+        "type": "International",
+        "departure": airport_list[2],
+        "destination": airport_list[0],
+        "departure_time": datetime.time(10),
+        "departure_date": datetime.date(2022, 11, 20),
+        "seats": [
+            {
+                "id": "A11",
+            },
+            {
+                "id": "A12",
+            },
+            {
+                "id": "A13",
+            },
+            {
+                "id": "B11",
+            },
+            {
+                "id": "B12",
+            },
+            {
+                "id": "B13",
+            }
+        ],
+        "crew": [
+            {
+                "name": "Augusto Machado",
+                "role": "Pilot"
+            },
+            {
+                "name": "Maria Silvana",
+                "role": "Co-Pilot"
+            },
+            {
+                "name": "Cleber Santos",
+                "role": "Flight Attendant"
+            },
+            {
+                "name": "Larissa Silva",
+                "role": "Flight Attendant"
+            }
+        ]
     }
 ]
