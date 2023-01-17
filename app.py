@@ -205,4 +205,5 @@ def add_flight():
         flight=FlightSchema().dump(schema)
     ), 200)
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run()
