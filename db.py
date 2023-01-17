@@ -73,19 +73,19 @@ flight_list = [
         "crew": [
             {
                 "name": "John Doe",
-                "role": "Pilot"
+                "occupation": "Pilot"
             },
             {
                 "name": "Jane Doe",
-                "role": "Co-Pilot"
+                "occupation": "Co-Pilot"
             },
             {
                 "name": "John Smith",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             },
             {
                 "name": "Jane Smith",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             }
         ]
     },
@@ -119,19 +119,19 @@ flight_list = [
         "crew": [
             {
                 "name": "Augusto Machado",
-                "role": "Pilot"
+                "occupation": "Pilot"
             },
             {
                 "name": "Maria Silvana",
-                "role": "Co-Pilot"
+                "occupation": "Co-Pilot"
             },
             {
                 "name": "Cleber Santos",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             },
             {
                 "name": "Larissa Silva",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             }
         ]
     },
@@ -165,19 +165,19 @@ flight_list = [
         "crew": [
             {
                 "name": "Augusto Machado",
-                "role": "Pilot"
+                "occupation": "Pilot"
             },
             {
                 "name": "Maria Silvana",
-                "role": "Co-Pilot"
+                "occupation": "Co-Pilot"
             },
             {
                 "name": "Cleber Santos",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             },
             {
                 "name": "Larissa Silva",
-                "role": "Flight Attendant"
+                "occupation": "Flight Attendant"
             }
         ]
     }
