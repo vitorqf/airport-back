@@ -1,55 +1,105 @@
-from db import Parts
+from model.airport import AirportSchema
+from model.city import CitySchema
+from model.flight import FlightSchema
+from model.seat import SeatSchema
+from model.crew import CrewSchema
 
-"""
-Step by step to create an API with Flask
-Step 1: pip install Flask and import it
-Step 2: create a Flask instance
-Step 3: run the app
-"""
+guarulhos = {
+    "name": "Guarulhos",
+    "state": "São Paulo",
+    "country": "Brazil",
+}
 
-from flask import Flask, make_response, jsonify, request
+los_angeles = {
+    "name": "Los Angeles",
+    "state": "California",
+    "country": "United States",
+}
 
-app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False 
+guarulhos = CitySchema().load(guarulhos)
+los_angeles = CitySchema().load(los_angeles)
 
-# Decorator from flask import
-@app.route('/parts', methods=['GET'])
-def get_parts():
-    # It's important to use flask make_response function to return a HTTP response. To handle data like raw list its also interesting to use jsonify function function to handle it as a json
-    return make_response(jsonify(
-        message='Part list',
-        data=Parts
-    ))
+print(f"=== Serialized City Info ===\n{ guarulhos }\n{ los_angeles }")
 
-@app.route('/parts/create', methods=['POST'])
-def create_new_part():
-    part = request.json
-    Parts.append(part)
-    
-    return make_response(jsonify(
-        message='Part successfully created!',
-        part=part
-    ))
+guarulhos_airport = {
+    # Deserializes the city object to a dictionary
+    "city": CitySchema().dump(guarulhos),
+    "max_departures": 10,
+    "name": "Guarulhos International Airport"
+}
 
+guarulhos_airport = AirportSchema().load(guarulhos_airport)
 
-@app.route('/parts/<part_id>', methods=['GET'])
-def get_part(part_id: str):
-    res = None
+los_angeles_airport = {
+    "city": CitySchema().dump(los_angeles),
+    "max_departures": 10,
+    "name": "Los Angeles International Airport"
+}
 
-    for part in Parts:
-        if part['id'] == int(part_id):
-            res = part
-        
-    if res is None:
-        return make_response(jsonify(
-            message='Part not found!',
-            part_id=part_id
-        ))
-    
-    return make_response(jsonify(
-        message='Part successfully retrieved!',
-        part=res
-    ))
+los_angeles_airport = AirportSchema().load(los_angeles_airport)
 
+print(f"\n=== Serialized Airport Info ===\n{ guarulhos_airport }\n{ los_angeles_airport }")
 
-app.run()
+seats = [
+    {
+        'id': 'A11'
+    },
+    {
+        'id': 'A12'
+    },
+    {
+        'id': 'A13'
+    },
+    {
+        'id': 'A14'
+    }
+]
+
+seats = SeatSchema(many=True).load(seats)
+
+crew = [
+    {
+        'name': 'John Doe',
+        'occupation': 'Pilot'
+    },
+    {
+        'name': 'Jane Doe',
+        'occupation': 'Co-Pilot'
+    },
+    {
+        'name': 'John Smith',
+        'occupation': 'Flight Attendant'
+    },
+    {
+        'name': 'Jane Smith',
+        'occupation': 'Flight Attendant'
+    }
+]
+
+crew = CrewSchema(many=True).load(crew)
+
+flight_a01 = {
+    'type': 'International',
+    'departure': AirportSchema().dump(guarulhos_airport),
+    'destination': AirportSchema().dump(los_angeles_airport),
+    'departure_time': '10:00:00',
+    'departure_date': '2021-01-01',
+    'seats': SeatSchema(many=True).dump(seats),
+    'crew': CrewSchema(many=True).dump(crew)
+}
+
+flight_a01 = FlightSchema().load(flight_a01)
+
+print(f"\n=== Serialized Flight Info ===\n{ flight_a01 }")
+
+free_seats = flight_a01.freeSeats()
+
+print(f"\n=== Free Seats ===")
+for seat in free_seats:
+    print(seat.id)
+
+crew_members = flight_a01.showCrew()
+
+print(f"\n=== Crew Members ===")
+for crew_member in crew_members:
+    print(crew_member)
